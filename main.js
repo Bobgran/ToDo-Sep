@@ -1,9 +1,12 @@
-let fakeDataBase = [
-    {id:1, task:"lvla till 34", ready:false},
-    {id:2, task:"Lär nya spells", ready:false},
-    {id:3, task:"Gå till Desolace", ready:false}
+let fakeDataBase;
 
-];
+if(localStorage.getItem("attGöra"))
+{
+    fakeDataBase = JSON.parse(localStorage.getItem("attGöra"));
+}
+else{
+    fakeDataBase = [];
+}
 
 let order = true;
 
@@ -22,17 +25,17 @@ function _getId(id)
 function deleteTask(index){
     fakeDataBase.splice(index, 1);
     renderFakeData();
-
+    saveLocal();
 
 }
 
 function completeTask(index){
-    //fakeDataBase[index].task.fontcolor("green");
     let objectTask = fakeDataBase[index];
     objectTask.ready = !objectTask.ready;
-    objectTask.task.fontcolor("green");
+   
 
     renderFakeData();
+    saveLocal();
 }
 
 _getId("orderBtn").addEventListener("click", changeOrder);
@@ -65,6 +68,11 @@ function renderFakeData(){
 
 _getId("taskForm").addEventListener("submit", addTask);
 
+function saveLocal()
+{
+    localStorage.setItem("attGöra", JSON.stringify(fakeDataBase));
+}
+
 function addTask(event){
     //Hindra formuläret att skickas till servern
     event.preventDefault();
@@ -76,6 +84,8 @@ function addTask(event){
    let taskObjekt = {id: Date.now(), task:inputText, ready:false}
    //spara i fakeDataBase
    fakeDataBase.push(taskObjekt);
+   //spara lokalt
+   saveLocal();
    //rendera på nytt
    renderFakeData();
    _getId("taskId").value = "";
